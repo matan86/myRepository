@@ -1,0 +1,266 @@
+USE [Aduno2]
+GO
+
+/****** Object:  Table [dbo].[CMS_ResourceString]    Script Date: 28.10.2014 16:29:34 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CMS_ResourceString](
+	[StringID] [int] IDENTITY(1,1) NOT NULL,
+	[StringKey] [nvarchar](200) NOT NULL,
+	[StringIsCustom] [bit] NOT NULL,
+	[StringLoadGeneration] [int] NOT NULL,
+ CONSTRAINT [PK_CMS_ResourceString] PRIMARY KEY NONCLUSTERED 
+(
+	[StringID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[CMS_ResourceString] ADD  CONSTRAINT [DEFAULT_CMS_ResourceString_StringLoadGeneration]  DEFAULT ((0)) FOR [StringLoadGeneration]
+GO
+
+
+
+
+
+USE [Aduno2]
+GO
+
+/****** Object:  Table [dbo].[CMS_ResourceTranslation]    Script Date: 28.10.2014 16:29:46 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CMS_ResourceTranslation](
+	[TranslationID] [int] IDENTITY(1,1) NOT NULL,
+	[TranslationStringID] [int] NOT NULL,
+	[TranslationUICultureID] [int] NOT NULL,
+	[TranslationText] [nvarchar](max) NULL,
+ CONSTRAINT [PK_CMS_ResourceTranslation] PRIMARY KEY CLUSTERED 
+(
+	[TranslationID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[CMS_ResourceTranslation]  WITH CHECK ADD  CONSTRAINT [FK_CMS_ResourceTranslation_TranslationStringID_CMS_ResourceString] FOREIGN KEY([TranslationStringID])
+REFERENCES [dbo].[CMS_ResourceString] ([StringID])
+GO
+
+ALTER TABLE [dbo].[CMS_ResourceTranslation] CHECK CONSTRAINT [FK_CMS_ResourceTranslation_TranslationStringID_CMS_ResourceString]
+GO
+
+ALTER TABLE [dbo].[CMS_ResourceTranslation]  WITH CHECK ADD  CONSTRAINT [FK_CMS_ResourceTranslation_TranslationUICultureID_CMS_UICulture] FOREIGN KEY([TranslationUICultureID])
+REFERENCES [dbo].[CMS_UICulture] ([UICultureID])
+GO
+
+ALTER TABLE [dbo].[CMS_ResourceTranslation] CHECK CONSTRAINT [FK_CMS_ResourceTranslation_TranslationUICultureID_CMS_UICulture]
+GO
+
+
+
+
+USE [Aduno2]
+GO
+
+/****** Object:  Table [dbo].[CMS_Tree]    Script Date: 28.10.2014 16:32:17 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CMS_Tree](
+	[NodeID] [int] IDENTITY(1,1) NOT NULL,
+	[NodeAliasPath] [nvarchar](450) NOT NULL,
+	[NodeName] [nvarchar](100) NOT NULL,
+	[NodeAlias] [nvarchar](50) NOT NULL,
+	[NodeClassID] [int] NOT NULL,
+	[NodeParentID] [int] NOT NULL,
+	[NodeLevel] [int] NOT NULL,
+	[NodeACLID] [int] NULL,
+	[NodeSiteID] [int] NOT NULL,
+	[NodeGUID] [uniqueidentifier] NOT NULL,
+	[NodeOrder] [int] NULL,
+	[IsSecuredNode] [bit] NULL,
+	[NodeCacheMinutes] [int] NULL,
+	[NodeSKUID] [int] NULL,
+	[NodeDocType] [nvarchar](max) NULL,
+	[NodeHeadTags] [nvarchar](max) NULL,
+	[NodeBodyElementAttributes] [nvarchar](max) NULL,
+	[NodeInheritPageLevels] [nvarchar](200) NULL,
+	[NodeChildNodesCount] [int] NULL,
+	[RequiresSSL] [int] NULL,
+	[NodeLinkedNodeID] [int] NULL,
+	[NodeOwner] [int] NULL,
+	[NodeCustomData] [nvarchar](max) NULL,
+	[NodeGroupID] [int] NULL,
+	[NodeLinkedNodeSiteID] [int] NULL,
+	[NodeTemplateID] [int] NULL,
+	[NodeWireframeTemplateID] [int] NULL,
+	[NodeWireframeComment] [nvarchar](max) NULL,
+	[NodeTemplateForAllCultures] [bit] NULL,
+	[NodeInheritPageTemplate] [bit] NULL,
+	[NodeWireframeInheritPageLevels] [nvarchar](450) NULL,
+	[NodeAllowCacheInFileSystem] [bit] NULL,
+ CONSTRAINT [PK_CMS_Tree] PRIMARY KEY NONCLUSTERED 
+(
+	[NodeID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] ADD  CONSTRAINT [DEFAULT_CMS_Tree_NodeTemplateForAllCultures]  DEFAULT ((0)) FOR [NodeTemplateForAllCultures]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] ADD  CONSTRAINT [DEFAULT_CMS_Tree_NodeInheritPageTemplate]  DEFAULT ((0)) FOR [NodeInheritPageTemplate]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] ADD  CONSTRAINT [DEFAULT_CMS_Tree_NodeAllowCacheInFileSystem]  DEFAULT ((0)) FOR [NodeAllowCacheInFileSystem]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_CMS_Tree] FOREIGN KEY([NodeID])
+REFERENCES [dbo].[CMS_Tree] ([NodeID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_CMS_Tree]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_NodeACLID_CMS_ACL] FOREIGN KEY([NodeACLID])
+REFERENCES [dbo].[CMS_ACL] ([ACLID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_NodeACLID_CMS_ACL]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_NodeClassID_CMS_Class] FOREIGN KEY([NodeClassID])
+REFERENCES [dbo].[CMS_Class] ([ClassID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_NodeClassID_CMS_Class]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_NodeGroupID_Community_Group] FOREIGN KEY([NodeGroupID])
+REFERENCES [dbo].[Community_Group] ([GroupID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_NodeGroupID_Community_Group]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_NodeLinkedNodeID_CMS_Tree] FOREIGN KEY([NodeLinkedNodeID])
+REFERENCES [dbo].[CMS_Tree] ([NodeID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_NodeLinkedNodeID_CMS_Tree]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_NodeLinkedNodeSiteID_CMS_Site] FOREIGN KEY([NodeLinkedNodeSiteID])
+REFERENCES [dbo].[CMS_Site] ([SiteID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_NodeLinkedNodeSiteID_CMS_Site]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_NodeOwner_CMS_User] FOREIGN KEY([NodeOwner])
+REFERENCES [dbo].[CMS_User] ([UserID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_NodeOwner_CMS_User]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_NodeSiteID_CMS_Site] FOREIGN KEY([NodeSiteID])
+REFERENCES [dbo].[CMS_Site] ([SiteID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_NodeSiteID_CMS_Site]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_NodeSKUID_COM_SKU] FOREIGN KEY([NodeSKUID])
+REFERENCES [dbo].[COM_SKU] ([SKUID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_NodeSKUID_COM_SKU]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_NodeTemplateID_CMS_PageTemplate] FOREIGN KEY([NodeTemplateID])
+REFERENCES [dbo].[CMS_PageTemplate] ([PageTemplateID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_NodeTemplateID_CMS_PageTemplate]
+GO
+
+ALTER TABLE [dbo].[CMS_Tree]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Tree_NodeWireframeTemplateID_CMS_PageTemplate] FOREIGN KEY([NodeWireframeTemplateID])
+REFERENCES [dbo].[CMS_PageTemplate] ([PageTemplateID])
+GO
+
+ALTER TABLE [dbo].[CMS_Tree] CHECK CONSTRAINT [FK_CMS_Tree_NodeWireframeTemplateID_CMS_PageTemplate]
+GO
+
+
+
+USE [Aduno2]
+GO
+
+/****** Object:  Table [dbo].[CMS_EventLog]    Script Date: 28.10.2014 16:32:52 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CMS_EventLog](
+	[EventID] [int] IDENTITY(1,1) NOT NULL,
+	[EventType] [nvarchar](5) NOT NULL,
+	[EventTime] [datetime] NOT NULL,
+	[Source] [nvarchar](100) NOT NULL,
+	[EventCode] [nvarchar](100) NOT NULL,
+	[UserID] [int] NULL,
+	[UserName] [nvarchar](250) NULL,
+	[IPAddress] [nvarchar](100) NULL,
+	[NodeID] [int] NULL,
+	[DocumentName] [nvarchar](100) NULL,
+	[EventDescription] [nvarchar](max) NULL,
+	[SiteID] [int] NULL,
+	[EventUrl] [nvarchar](2000) NULL,
+	[EventMachineName] [nvarchar](100) NULL,
+	[EventUserAgent] [nvarchar](max) NULL,
+	[EventUrlReferrer] [nvarchar](2000) NULL,
+ CONSTRAINT [PK_CMS_EventLog] PRIMARY KEY NONCLUSTERED 
+(
+	[EventID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[CMS_EventLog]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Event_NodeID_CMS_Tree] FOREIGN KEY([NodeID])
+REFERENCES [dbo].[CMS_Tree] ([NodeID])
+GO
+
+ALTER TABLE [dbo].[CMS_EventLog] CHECK CONSTRAINT [FK_CMS_Event_NodeID_CMS_Tree]
+GO
+
+ALTER TABLE [dbo].[CMS_EventLog]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Event_SiteID_CMS_Site] FOREIGN KEY([SiteID])
+REFERENCES [dbo].[CMS_Site] ([SiteID])
+GO
+
+ALTER TABLE [dbo].[CMS_EventLog] CHECK CONSTRAINT [FK_CMS_Event_SiteID_CMS_Site]
+GO
+
+ALTER TABLE [dbo].[CMS_EventLog]  WITH CHECK ADD  CONSTRAINT [FK_CMS_Event_UserID_CMS_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[CMS_User] ([UserID])
+GO
+
+ALTER TABLE [dbo].[CMS_EventLog] CHECK CONSTRAINT [FK_CMS_Event_UserID_CMS_User]
+GO
+
+
